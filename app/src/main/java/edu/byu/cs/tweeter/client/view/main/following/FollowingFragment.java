@@ -116,6 +116,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    //TODO somehow I need to get getUsers to be called here
                     presenter.gotoUser(userAlias.getText().toString());
                 }
             });

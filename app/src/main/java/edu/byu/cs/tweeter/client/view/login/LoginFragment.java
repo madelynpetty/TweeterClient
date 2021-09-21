@@ -42,6 +42,26 @@ public class LoginFragment extends Fragment implements LoginPresenter.View {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+
+        alias = view.findViewById(R.id.loginUsername);
+        password = view.findViewById(R.id.loginPassword);
+        errorView = view.findViewById(R.id.loginError);
+        Button loginButton = view.findViewById(R.id.loginButton);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                presenter.login(alias.getText().toString(), password.getText().toString());
+            }
+        });
+
+        return view;
+    }
+
+    @Override
     public void navigateToUser(User user) {
         Intent intent = new Intent(getContext(), MainActivity.class);
         intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
@@ -63,7 +83,6 @@ public class LoginFragment extends Fragment implements LoginPresenter.View {
         clearInfoMessage();
         loginInToast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
         loginInToast.show();
-
     }
 
     @Override
@@ -74,24 +93,4 @@ public class LoginFragment extends Fragment implements LoginPresenter.View {
         }
     }
 
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
-
-        alias = view.findViewById(R.id.loginUsername);
-        password = view.findViewById(R.id.loginPassword);
-        errorView = view.findViewById(R.id.loginError);
-        Button loginButton = view.findViewById(R.id.loginButton);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                presenter.login(alias.getText().toString(), password.getText().toString());
-            }
-        });
-
-        return view;
-    }
 }

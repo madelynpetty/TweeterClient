@@ -45,10 +45,6 @@ public class FollowingPresenter implements FollowService.GetFollowingObserver {
         view.navigateToUser(alias);
     }
 
-    public User getUser() {
-        return targetUser;
-    }
-
     @Override
     public void getFollowingSucceeded(List<User> users, boolean hasMorePages) {
         //do nothing
