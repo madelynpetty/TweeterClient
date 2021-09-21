@@ -23,6 +23,7 @@ import java.util.List;
 
 import edu.byu.cs.client.R;
 import edu.byu.cs.tweeter.client.cache.Cache;
+import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.client.presenter.FollowingPresenter;
 import edu.byu.cs.tweeter.client.view.main.MainActivity;
 import edu.byu.cs.tweeter.client.view.util.ImageUtils;
@@ -83,39 +84,6 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         return view;
     }
 
-    @Override
-    public void addItems(List<User> followees) {
-        followingRecyclerViewAdapter.addItems(followees);
-    }
-
-    @Override
-    public void setLoading(boolean value) {
-        isLoading = value;
-        if (isLoading) {
-            followingRecyclerViewAdapter.addLoadingFooter();
-        }
-        else {
-            followingRecyclerViewAdapter.removeLoadingFooter();
-        }
-    }
-
-    @Override
-    public void navigateToUser(String user) {
-        Intent intent = new Intent(getContext(), MainActivity.class);
-        intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
-        startActivity(intent);
-    }
-
-    @Override
-    public void displayErrorMessage(String message) {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void displayInfoMessage(String message) {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-    }
-
     private void loadMoreItems() {
         // Run this code later on the UI thread
         final Handler handler = new Handler(Looper.getMainLooper());
@@ -171,8 +139,6 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
      */
     private class FollowingRecyclerViewAdapter extends RecyclerView.Adapter<FollowingHolder> {
         private final List<User> users = new ArrayList<>();
-
-
         /**
          * Creates an instance and loads the first page of following data.
          */
@@ -332,5 +298,38 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
                 loadMoreItems();
             }
         }
+    }
+
+    @Override
+    public void addItems(List<User> followees) {
+        followingRecyclerViewAdapter.addItems(followees);
+    }
+
+    @Override
+    public void setLoading(boolean value) {
+        isLoading = value;
+        if (isLoading) {
+            followingRecyclerViewAdapter.addLoadingFooter();
+        }
+        else {
+            followingRecyclerViewAdapter.removeLoadingFooter();
+        }
+    }
+
+    @Override
+    public void navigateToUser(String user) {
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
+        startActivity(intent);
+    }
+
+    @Override
+    public void displayErrorMessage(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void displayInfoMessage(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 }

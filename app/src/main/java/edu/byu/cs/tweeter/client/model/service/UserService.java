@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 import edu.byu.cs.tweeter.client.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.backgroundTask.LoginTask;
 import edu.byu.cs.tweeter.client.cache.Cache;
+import edu.byu.cs.tweeter.client.presenter.FollowingPresenter;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
@@ -22,7 +23,7 @@ public class UserService {
         void getUserThrewException(Exception e);
     }
 
-    void getUser(AuthToken authtoken, String alias, GetUserObserver observer) {
+    public static void getUser(AuthToken authtoken, String alias, GetUserObserver observer) {
         GetUserTask getUserTask = new GetUserTask(authtoken, alias, new GetUserHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(getUserTask);
@@ -31,7 +32,7 @@ public class UserService {
     /**
      * Message handler (i.e., observer) for GetUserTask.
      */
-    private class GetUserHandler extends Handler {
+    private static class GetUserHandler extends Handler {
         private GetUserObserver observer;
 
         public GetUserHandler(GetUserObserver observer) {
