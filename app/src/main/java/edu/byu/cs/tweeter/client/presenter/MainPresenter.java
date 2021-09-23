@@ -9,7 +9,9 @@ import java.net.MalformedURLException;
 import java.text.ParseException;
 
 public class MainPresenter implements StatusService.PostStatusObserver,
-        UserService.LogoutObserver, FollowService.FollowObserver {
+        UserService.LogoutObserver, FollowService.FollowObserver, FollowService.UnfollowObserver,
+        FollowService.FollowerCountObserver, FollowService.FollowingCountObserver,
+        FollowService.IsFollowerObserver {
 
     public interface View {
         void displayErrorMessage(String message);
@@ -95,7 +97,7 @@ public class MainPresenter implements StatusService.PostStatusObserver,
 
     @Override
     public void callUpdateSelectedUserFollowingAndFollowers(User user) {
-        new FollowService().updateSelectedUserFollowingAndFollowers(this, user);
+        new FollowService().updateSelectedUserFollowingAndFollowers(this, this, user);
     }
 
     @Override
