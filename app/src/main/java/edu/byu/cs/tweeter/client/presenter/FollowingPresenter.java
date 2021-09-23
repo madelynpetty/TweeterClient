@@ -43,10 +43,6 @@ public class FollowingPresenter implements FollowService.GetFollowingObserver,
         }
     }
 
-    public void gotoUser(User user) {
-        view.navigateToUser(user);
-    }
-
     public void getUsers(String alias) {
         UserService.getUsers(Cache.getInstance().getCurrUserAuthToken(), alias, this);
     }

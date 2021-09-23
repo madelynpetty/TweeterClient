@@ -15,7 +15,6 @@ public class FollowerPresenter implements FollowService.GetFollowersObserver,
         void setLoading(boolean value);
         void navigateToUser(User user);
         void displayMessage(String message);
-//        void showFollowers(List<User> followers, boolean hasMorePages, User lastFollower);
     }
 
     private View view;
@@ -34,14 +33,8 @@ public class FollowerPresenter implements FollowService.GetFollowersObserver,
     }
 
     public void getUsers(String alias) {
-//        UserService.getUsers(Cache.getInstance().getCurrUserAuthToken(), alias, this);
-//        view.switchToUser(alias);
         UserService.getUsers(Cache.getInstance().getCurrUserAuthToken(), alias, this);
     }
-//
-//    public void getUsers(User user, User lastFollower) {
-//        FollowService.getFollowers(this, user, lastFollower);
-//    }
 
     public void loadMoreItems() {
         if (!isLoading && hasMorePages) {

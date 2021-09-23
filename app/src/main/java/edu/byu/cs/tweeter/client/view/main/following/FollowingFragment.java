@@ -23,7 +23,6 @@ import java.util.List;
 
 import edu.byu.cs.client.R;
 import edu.byu.cs.tweeter.client.cache.Cache;
-import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.client.presenter.FollowingPresenter;
 import edu.byu.cs.tweeter.client.view.main.MainActivity;
 import edu.byu.cs.tweeter.client.view.util.ImageUtils;
@@ -333,9 +332,4 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
     public void displayInfoMessage(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
-
-//    @Override
-//    public void setRecyclerViewVars(List<User> users, boolean hasMorePages) {
-////        followingRecyclerViewAdapter.users = users;
-//    }
 }
