@@ -9,7 +9,7 @@ import java.net.MalformedURLException;
 import java.text.ParseException;
 
 public class MainPresenter implements PostStatusService.PostStatusObserver,
-        UserService.LogoutObserver, FollowService.FollowObserver, FollowService.IsFollowerObserver {
+        UserService.LogoutObserver, FollowService.FollowObserver {
 
     public interface View {
         void displayErrorMessage(String message);
@@ -49,9 +49,9 @@ public class MainPresenter implements PostStatusService.PostStatusObserver,
         new FollowService().follow(this, user);
     }
 
-    public void unfollow(String followButton, String name) {
+    public void unfollow(String name, User user) {
         view.displayInfoMessage("Removing " + name + "...");
-        new FollowService().unfollow(this, followButton);
+        new FollowService().unfollow(this, user);
     }
 
     public void isFollower() {
@@ -90,7 +90,7 @@ public class MainPresenter implements PostStatusService.PostStatusObserver,
 
     @Override
     public void updateFollowButton(boolean removed) {
-        view.updateFollowButton(false);
+        view.updateFollowButton(removed);
     }
 
     @Override

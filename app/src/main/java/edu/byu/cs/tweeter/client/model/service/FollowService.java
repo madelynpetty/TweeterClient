@@ -83,6 +83,11 @@ public class FollowService {
         void setFollowingCount(int count);
         void followingCountFailed(String message);
         void followingCountThrewException(Exception e);
+
+        void setIsFollowerButton();
+        void setIsNotFollowerButton();
+        void isFollowerFailed(String message);
+        void isFollowerThrewException(Exception e);
     }
 
     private User selectedUser;
@@ -136,18 +141,12 @@ public class FollowService {
 
     //UNFOLLOW
 
-    public void unfollow(FollowService.FollowObserver observer, String followButton) {
-        observer.setFollowButton(false);
-
-        if (followButton.equals("Following")) {
-            UnfollowTask unfollowTask = new UnfollowTask(Cache.getInstance().getCurrUserAuthToken(),
-                    selectedUser, new UnfollowHandler(observer));
-            ExecutorService executor = Executors.newSingleThreadExecutor();
-            executor.execute(unfollowTask);
-        }
-        else {
-            observer.follow(selectedUser);
-        }
+    public void unfollow(FollowService.FollowObserver observer, User selectedUser) {
+        this.selectedUser = selectedUser;
+        UnfollowTask unfollowTask = new UnfollowTask(Cache.getInstance().getCurrUserAuthToken(),
+                selectedUser, new UnfollowHandler(observer));
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(unfollowTask);
     }
 
     private class UnfollowHandler extends Handler {
@@ -225,14 +224,7 @@ public class FollowService {
 
     //IS FOLLOWER
 
-    public interface IsFollowerObserver {
-        void setIsFollowerButton();
-        void setIsNotFollowerButton();
-        void isFollowerFailed(String message);
-        void isFollowerThrewException(Exception e);
-    }
-
-    public void isFollower(FollowService.IsFollowerObserver observer) {
+    public void isFollower(FollowService.FollowObserver observer) {
         IsFollowerTask isFollowerTask = new IsFollowerTask(Cache.getInstance().getCurrUserAuthToken(),
                 Cache.getInstance().getCurrUser(), selectedUser, new IsFollowerHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -240,8 +232,8 @@ public class FollowService {
     }
 
     private class IsFollowerHandler extends Handler {
-        private FollowService.IsFollowerObserver observer;
-        public IsFollowerHandler(FollowService.IsFollowerObserver observer) {
+        private FollowService.FollowObserver observer;
+        public IsFollowerHandler(FollowService.FollowObserver observer) {
             this.observer = observer;
         }
 

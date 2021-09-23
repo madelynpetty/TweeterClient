@@ -100,7 +100,12 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.unfollow(followButton.getText().toString(), selectedUser.getName());
+                if (followButton.getText().toString().equals(v.getContext().getString(R.string.following))) {
+                    presenter.unfollow(selectedUser.getName(), selectedUser);
+                }
+                else {
+                    presenter.follow(selectedUser);
+                }
             }
         });
     }
