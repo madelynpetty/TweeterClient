@@ -1,14 +1,14 @@
 package edu.byu.cs.tweeter.client.presenter;
 
 import edu.byu.cs.tweeter.client.model.service.FollowService;
-import edu.byu.cs.tweeter.client.model.service.PostStatusService;
+import edu.byu.cs.tweeter.client.model.service.StatusService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.User;
 
 import java.net.MalformedURLException;
 import java.text.ParseException;
 
-public class MainPresenter implements PostStatusService.PostStatusObserver,
+public class MainPresenter implements StatusService.PostStatusObserver,
         UserService.LogoutObserver, FollowService.FollowObserver {
 
     public interface View {
@@ -35,7 +35,7 @@ public class MainPresenter implements PostStatusService.PostStatusObserver,
 
     public void postStatus(String post) throws ParseException, MalformedURLException {
         view.displayInfoMessage("Posting Status...");
-        new PostStatusService().postStatus(post, this);
+        new StatusService().postStatus(post, this);
     }
 
     public void logout() {
