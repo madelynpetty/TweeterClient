@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 
 import edu.byu.cs.tweeter.client.backgroundTask.FollowTask;
 import edu.byu.cs.tweeter.client.backgroundTask.GetFollowersCountTask;
+import edu.byu.cs.tweeter.client.backgroundTask.GetFollowersTask;
 import edu.byu.cs.tweeter.client.backgroundTask.GetFollowingCountTask;
 import edu.byu.cs.tweeter.client.backgroundTask.GetFollowingTask;
 import edu.byu.cs.tweeter.client.backgroundTask.IsFollowerTask;
@@ -20,6 +21,7 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowService {
+    private static final int PAGE_SIZE = 10;
 
     //GET FOLLOWING
 
@@ -58,6 +60,50 @@ public class FollowService {
             } else if (msg.getData().containsKey(GetFollowingTask.EXCEPTION_KEY)) {
                 Exception ex = (Exception) msg.getData().getSerializable(GetFollowingTask.EXCEPTION_KEY);
                 observer.getFollowingThrewException(ex);
+            }
+        }
+    }
+
+    //GET FOLLOWERS
+
+    public interface GetFollowersObserver {
+        public void getFollowerSucceeded(List<User> followers, boolean hasMorePages, User lastFollower);
+        public void getFollowerFailed(String message);
+        public void getFollowerThrewException(Exception e);
+    }
+
+    public static void getFollowers(GetFollowersObserver observer, User user, User lastFollower) {
+        GetFollowersTask getFollowersTask = new GetFollowersTask(Cache.getInstance().getCurrUserAuthToken(),
+                user, PAGE_SIZE, lastFollower, new GetFollowersHandler(observer));
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(getFollowersTask);
+    }
+
+    /**
+     * Message handler (i.e., observer) for GetFollowersTask.
+     */
+    private static class GetFollowersHandler extends Handler {
+        GetFollowersObserver observer;
+
+        GetFollowersHandler(GetFollowersObserver observer) {
+            this.observer = observer;
+        }
+
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            boolean success = msg.getData().getBoolean(GetFollowersTask.SUCCESS_KEY);
+            if (success) {
+                List<User> followers = (List<User>) msg.getData().getSerializable(GetFollowersTask.FOLLOWERS_KEY);
+                boolean hasMorePages = msg.getData().getBoolean(GetFollowersTask.MORE_PAGES_KEY);
+                User lastFollower = (followers.size() > 0) ? followers.get(followers.size() - 1) : null;
+
+                observer.getFollowerSucceeded(followers, hasMorePages, lastFollower);
+            } else if (msg.getData().containsKey(GetFollowersTask.MESSAGE_KEY)) {
+                String message = msg.getData().getString(GetFollowersTask.MESSAGE_KEY);
+                observer.getFollowerFailed(message);
+            } else if (msg.getData().containsKey(GetFollowersTask.EXCEPTION_KEY)) {
+                Exception ex = (Exception) msg.getData().getSerializable(GetFollowersTask.EXCEPTION_KEY);
+                observer.getFollowerThrewException(ex);
             }
         }
     }

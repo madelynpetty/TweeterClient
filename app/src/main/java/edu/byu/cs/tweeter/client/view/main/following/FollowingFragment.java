@@ -116,8 +116,8 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //TODO somehow I need to get getUsers to be called here
                     presenter.gotoUser(userAlias.getText().toString());
+                    Toast.makeText(getContext(), "Getting user's profile...", Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -333,4 +333,9 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
     public void displayInfoMessage(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
+
+//    @Override
+//    public void setRecyclerViewVars(List<User> users, boolean hasMorePages) {
+////        followingRecyclerViewAdapter.users = users;
+//    }
 }

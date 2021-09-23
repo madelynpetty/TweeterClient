@@ -15,6 +15,7 @@ public class FollowingPresenter implements FollowService.GetFollowingObserver {
         void navigateToUser(String user);
         void displayErrorMessage(String message);
         void displayInfoMessage(String message);
+//        void setRecyclerViewVars(List<User> users, boolean hasMorePages);
     }
 
     private static final int PAGE_SIZE = 10;
@@ -47,7 +48,7 @@ public class FollowingPresenter implements FollowService.GetFollowingObserver {
 
     @Override
     public void getFollowingSucceeded(List<User> users, boolean hasMorePages) {
-        //do nothing
+//        view.setRecyclerViewVars(users, hasMorePages);
     }
 
     @Override
