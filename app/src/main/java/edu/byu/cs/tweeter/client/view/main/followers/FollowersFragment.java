@@ -46,10 +46,9 @@ public class FollowersFragment extends Fragment implements FollowerPresenter.Vie
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
 
+    private boolean isLoading;
 
-    private User user;
-
-    private FollowerPresenter presenter = new FollowerPresenter(this);
+    private FollowerPresenter presenter;
     public FollowersRecyclerViewAdapter followersRecyclerViewAdapter;
 
     /**
@@ -75,9 +74,9 @@ public class FollowersFragment extends Fragment implements FollowerPresenter.Vie
         View view = inflater.inflate(R.layout.fragment_followers, container, false);
 
         //noinspection ConstantConditions
-        user = (User) getArguments().getSerializable(USER_KEY);
+        User user = (User) getArguments().getSerializable(USER_KEY);
 
-        presenter = new FollowerPresenter(this);
+        presenter = new FollowerPresenter(this, user);
         RecyclerView followersRecyclerView = view.findViewById(R.id.followersRecyclerView);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
@@ -127,6 +126,7 @@ public class FollowersFragment extends Fragment implements FollowerPresenter.Vie
          * @param user the user.
          */
         void bindUser(User user) {
+            System.out.println(user);
             if (user == null)
                 Log.e(LOG_TAG, "user is null!");
             if (user != null && user.getImageBytes() == null)
@@ -141,13 +141,7 @@ public class FollowersFragment extends Fragment implements FollowerPresenter.Vie
      * The adapter for the RecyclerView that displays the follower data.
      */
     private class FollowersRecyclerViewAdapter extends RecyclerView.Adapter<FollowersHolder> {
-
         private final List<User> users = new ArrayList<>();
-
-        private User lastFollower;
-
-        private boolean hasMorePages;
-        private boolean isLoading = false;
 
         /**
          * Creates an instance and loads the first page of following data.
@@ -253,19 +247,6 @@ public class FollowersFragment extends Fragment implements FollowerPresenter.Vie
         }
 
         /**
-         * Causes the Adapter to display a loading footer and make a request to get more following
-         * data.
-         */
-        void loadMoreItems() {
-            if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
-                isLoading = true;
-                addLoadingFooter();
-
-                presenter.getFollowers(user, lastFollower);
-            }
-        }
-
-        /**
          * Adds a dummy user to the list of users so the RecyclerView will display a view (the
          * loading footer view) at the bottom of the list.
          */
@@ -316,21 +297,39 @@ public class FollowersFragment extends Fragment implements FollowerPresenter.Vie
             int totalItemCount = layoutManager.getItemCount();
             int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
 
-            if (!followersRecyclerViewAdapter.isLoading && followersRecyclerViewAdapter.hasMorePages) {
-                if ((visibleItemCount + firstVisibleItemPosition) >=
-                        totalItemCount && firstVisibleItemPosition >= 0) {
-                    // Run this code later on the UI thread
-                    final Handler handler = new Handler(Looper.getMainLooper());
-                    handler.postDelayed(() -> {
-                        followersRecyclerViewAdapter.loadMoreItems();
-                    }, 0);
-                }
+            if ((visibleItemCount + firstVisibleItemPosition) >=
+                    totalItemCount && firstVisibleItemPosition >= 0) {
+                presenter.loadMoreItems();
             }
         }
     }
 
+    private void loadMoreItems() {
+        // Run this code later on the UI thread
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(() -> {
+            presenter.loadMoreItems();
+        }, 0);
+    }
+
     @Override
-    public void switchToUser(User user) {
+    public void addItems(List<User> following) {
+        followersRecyclerViewAdapter.addItems(following);
+    }
+
+    @Override
+    public void setLoading(boolean value) {
+        isLoading = value;
+        if (isLoading) {
+            followersRecyclerViewAdapter.addLoadingFooter();
+        }
+        else {
+            followersRecyclerViewAdapter.removeLoadingFooter();
+        }
+    }
+
+    @Override
+    public void navigateToUser(User user) {
         Intent intent = new Intent(getContext(), MainActivity.class);
         intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
         startActivity(intent);
@@ -341,15 +340,15 @@ public class FollowersFragment extends Fragment implements FollowerPresenter.Vie
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    @Override
-    public void showFollowers(List<User> followers, boolean hasMorePages, User lastFollower) {
-        //TODO this seems like something important that is missing in the followING crap
-        followersRecyclerViewAdapter.hasMorePages = hasMorePages;
-        followersRecyclerViewAdapter.lastFollower = lastFollower;
-
-        followersRecyclerViewAdapter.addItems(followers);
-        followersRecyclerViewAdapter.isLoading = false;
-        followersRecyclerViewAdapter.removeLoadingFooter();
-    }
+//    @Override
+//    public void showFollowers(List<User> followers, boolean hasMorePages, User lastFollower) {
+//        //TODO this seems like something important that is missing in the followING crap
+//        followersRecyclerViewAdapter.hasMorePages = hasMorePages;
+//        followersRecyclerViewAdapter.lastFollower = lastFollower;
+//
+//        followersRecyclerViewAdapter.addItems(followers);
+//        followersRecyclerViewAdapter.isLoading = false;
+//        followersRecyclerViewAdapter.removeLoadingFooter();
+//    }
 
 }

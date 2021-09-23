@@ -7,33 +7,55 @@ import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class FollowerPresenter implements FollowService.GetFollowersObserver, UserService.GetUserObserver {
+public class FollowerPresenter implements FollowService.GetFollowersObserver,
+        UserService.GetUserObserver {
 
     public interface View {
-        void switchToUser(User user);
+        void addItems(List<User> followees);
+        void setLoading(boolean value);
+        void navigateToUser(User user);
         void displayMessage(String message);
-        void showFollowers(List<User> followers, boolean hasMorePages, User lastFollower);
+//        void showFollowers(List<User> followers, boolean hasMorePages, User lastFollower);
     }
 
     private View view;
+    private boolean hasMorePages = true;
+    private boolean isLoading = false;
+    private User user;
+    private User lastFollower = null;
 
-    public FollowerPresenter(View view) {
+    public FollowerPresenter(View view, User user) {
         this.view = view;
+        this.user = user;
+    }
+
+    public void gotoUser(User user) {
+        view.navigateToUser(user);
     }
 
     public void getUsers(String alias) {
+//        UserService.getUsers(Cache.getInstance().getCurrUserAuthToken(), alias, this);
+//        view.switchToUser(alias);
         UserService.getUsers(Cache.getInstance().getCurrUserAuthToken(), alias, this);
     }
+//
+//    public void getUsers(User user, User lastFollower) {
+//        FollowService.getFollowers(this, user, lastFollower);
+//    }
 
-    public void getFollowers(User user, User lastFollower) {
-        FollowService.getFollowers(this, user, lastFollower);
+    public void loadMoreItems() {
+        if (!isLoading && hasMorePages) {
+            isLoading = true;
+            view.setLoading(true);
+
+            new FollowService().getFollowers(this, user, lastFollower);
+        }
     }
-
 
     //FOR GET USERS
     @Override
     public void getUserSucceeded(User user) {
-        view.switchToUser(user);
+        view.navigateToUser(user);
     }
 
     @Override
@@ -50,7 +72,9 @@ public class FollowerPresenter implements FollowService.GetFollowersObserver, Us
 
     @Override
     public void getFollowerSucceeded(List<User> followers, boolean hasMorePages, User lastFollower) {
-        view.showFollowers(followers, hasMorePages, lastFollower);
+        view.setLoading(false);
+        view.addItems(followers);
+        this.hasMorePages = hasMorePages;
     }
 
     @Override

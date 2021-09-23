@@ -2,20 +2,21 @@ package edu.byu.cs.tweeter.client.presenter;
 
 import java.util.List;
 
+import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class FollowingPresenter implements FollowService.GetFollowingObserver {
+public class FollowingPresenter implements FollowService.GetFollowingObserver,
+        UserService.GetUserObserver {
 
     public interface View {
         void addItems(List<User> followees);
         void setLoading(boolean value);
-        void navigateToUser(String user);
+        void navigateToUser(User user);
         void displayErrorMessage(String message);
         void displayInfoMessage(String message);
-//        void setRecyclerViewVars(List<User> users, boolean hasMorePages);
     }
 
     private static final int PAGE_SIZE = 10;
@@ -24,7 +25,7 @@ public class FollowingPresenter implements FollowService.GetFollowingObserver {
     private User targetUser;
 
     private User lastFollowee = null;
-    private boolean hasMorePages = false;
+    private boolean hasMorePages = true;
     private boolean isLoading = false;
 
     public FollowingPresenter(View view, AuthToken authToken, User targetUser) {
@@ -42,13 +43,37 @@ public class FollowingPresenter implements FollowService.GetFollowingObserver {
         }
     }
 
-    public void gotoUser(String alias) {
-        view.navigateToUser(alias);
+    public void gotoUser(User user) {
+        view.navigateToUser(user);
+    }
+
+    public void getUsers(String alias) {
+        UserService.getUsers(Cache.getInstance().getCurrUserAuthToken(), alias, this);
+    }
+
+    //FOR GET USERS
+    @Override
+    public void getUserSucceeded(User user) {
+        view.navigateToUser(user);
     }
 
     @Override
+    public void getUserFailed(String message) {
+
+    }
+
+    @Override
+    public void getUserThrewException(Exception e) {
+
+    }
+
+    //FOR GET FOLLOWING
+    @Override
     public void getFollowingSucceeded(List<User> users, boolean hasMorePages) {
 //        view.setRecyclerViewVars(users, hasMorePages);
+        view.setLoading(false);
+        view.addItems(users);
+        this.hasMorePages = hasMorePages;
     }
 
     @Override

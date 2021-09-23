@@ -64,12 +64,13 @@ public class FollowService {
         }
     }
 
+
     //GET FOLLOWERS
 
     public interface GetFollowersObserver {
-        public void getFollowerSucceeded(List<User> followers, boolean hasMorePages, User lastFollower);
-        public void getFollowerFailed(String message);
-        public void getFollowerThrewException(Exception e);
+        void getFollowerSucceeded(List<User> followers, boolean hasMorePages, User lastFollower);
+        void getFollowerFailed(String message);
+        void getFollowerThrewException(Exception e);
     }
 
     public static void getFollowers(GetFollowersObserver observer, User user, User lastFollower) {

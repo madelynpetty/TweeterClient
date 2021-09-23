@@ -162,6 +162,9 @@ public class FeedFragment extends Fragment {
                             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(clickable));
                             startActivity(intent);
                         } else {
+                            //TODO this is what needs to go here
+//                            presenter.getUsers(userAlias.getText().toString());
+//                            Toast.makeText(getContext(), "Getting user's profile...", Toast.LENGTH_LONG).show();
                             GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
                                     clickable, new GetUserHandler());
                             ExecutorService executor = Executors.newSingleThreadExecutor();
