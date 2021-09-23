@@ -152,12 +152,11 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
 
                         String clickable = s.subSequence(start, end).toString();
 
-
                         if (clickable.contains("http")) {
                             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(clickable));
                             startActivity(intent);
                         } else {
-                            presenter.getUsers(userAlias.getText().toString());
+                            presenter.getUsers(clickable);
                             Toast.makeText(getContext(), "Getting user's profile...", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -375,7 +374,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
     @Override
     public void setLoading(boolean value) {
         isLoading = value;
-        if (isLoading) {
+        if (value) {
             storyRecyclerViewAdapter.addLoadingFooter();
         }
         else {

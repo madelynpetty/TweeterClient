@@ -137,6 +137,30 @@ public class FollowService {
         void isFollowerThrewException(Exception e);
     }
 
+//    public interface UnfollowObserver {
+//        void unfollowFailed(String message);
+//        void unfollowThrewException(Exception e);
+//    }
+
+//    public interface FollowerCount {
+//        void setFollowerCount(int count);
+//        void followerCountFailed(String message);
+//        void followerCountThrewException(Exception e);
+//    }
+
+//    public interface FollowingCount {
+//        void setFollowingCount(int count);
+//        void followingCountFailed(String message);
+//        void followingCountThrewException(Exception e);
+//    }
+
+//    public interface isFollower {
+//        void setIsFollowerButton();
+//        void setIsNotFollowerButton();
+//        void isFollowerFailed(String message);
+//        void isFollowerThrewException(Exception e);
+//    }
+
     private User selectedUser;
 
     public void follow(FollowService.FollowObserver observer, User selectedUser) {
