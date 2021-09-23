@@ -1,11 +1,12 @@
 package edu.byu.cs.tweeter.client.presenter;
 
 import android.widget.ImageView;
-import edu.byu.cs.tweeter.client.model.service.RegisterService;
+
+import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class RegisterPresenter implements RegisterService.RegisterObserver {
+public class RegisterPresenter implements UserService.RegisterObserver {
     public interface View {
         void navigateToUser(User user);
         void uploadingImage();
@@ -31,7 +32,7 @@ public class RegisterPresenter implements RegisterService.RegisterObserver {
 
         if (message == null) {
             view.displayInfoMessage("Registering...");
-            new RegisterService().register(firstName, lastName, alias, password, image, this);
+            new UserService().register(firstName, lastName, alias, password, image, this);
         }
         else {
             view.displayErrorMessage("Login failed: " + message);

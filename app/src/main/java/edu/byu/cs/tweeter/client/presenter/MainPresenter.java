@@ -1,12 +1,15 @@
 package edu.byu.cs.tweeter.client.presenter;
 
-import edu.byu.cs.tweeter.client.model.service.MainService;
+import edu.byu.cs.tweeter.client.model.service.FollowService;
+import edu.byu.cs.tweeter.client.model.service.PostStatusService;
+import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.User;
 
 import java.net.MalformedURLException;
 import java.text.ParseException;
 
-public class MainPresenter implements MainService.MainObserver {
+public class MainPresenter implements PostStatusService.PostStatusObserver,
+        UserService.LogoutObserver, FollowService.FollowObserver, FollowService.IsFollowerObserver {
 
     public interface View {
         void displayErrorMessage(String message);
@@ -32,27 +35,27 @@ public class MainPresenter implements MainService.MainObserver {
 
     public void postStatus(String post) throws ParseException, MalformedURLException {
         view.displayInfoMessage("Posting Status...");
-        new MainService().postStatus(post, this);
+        new PostStatusService().postStatus(post, this);
     }
 
     public void logout() {
         view.displayInfoMessage("Logging Out...");
-        new MainService().logout(this);
+        new UserService().logout(this);
     }
 
     @Override
     public void follow(User user) {
         view.displayInfoMessage("Adding " + user.getName() + "...");
-        new MainService().follow(this, user);
+        new FollowService().follow(this, user);
     }
 
     public void unfollow(String followButton, String name) {
         view.displayInfoMessage("Removing " + name + "...");
-        new MainService().unfollow(this, followButton);
+        new FollowService().unfollow(this, followButton);
     }
 
     public void isFollower() {
-        new MainService().isFollower(this);
+        new FollowService().isFollower(this);
     }
 
     @Override
@@ -92,7 +95,7 @@ public class MainPresenter implements MainService.MainObserver {
 
     @Override
     public void callUpdateSelectedUserFollowingAndFollowers(User user) {
-        new MainService().updateSelectedUserFollowingAndFollowers(this, user);
+        new FollowService().updateSelectedUserFollowingAndFollowers(this, user);
     }
 
     @Override
