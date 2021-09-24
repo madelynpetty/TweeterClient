@@ -70,6 +70,7 @@ public class FollowingPresenter implements FollowService.GetFollowingObserver,
         view.setLoading(false);
         view.addItems(users);
         this.hasMorePages = hasMorePages;
+        isLoading = false;
     }
 
     @Override

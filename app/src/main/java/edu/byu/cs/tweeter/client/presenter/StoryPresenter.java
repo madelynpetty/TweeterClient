@@ -62,6 +62,7 @@ public class StoryPresenter implements StatusService.StoryObserver,
         view.setLoading(false);
         view.addItems(statuses);
         this.hasMorePages = hasMorePages;
+        isLoading = false;
     }
 
     @Override

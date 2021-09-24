@@ -49,6 +49,7 @@ public class FeedPresenter implements StatusService.FeedObserver,
         view.addItems(statuses);
         this.hasMorePages = hasMorePages;
         this.lastStatus = lastStatus;
+        isLoading = false;
     }
 
     @Override
