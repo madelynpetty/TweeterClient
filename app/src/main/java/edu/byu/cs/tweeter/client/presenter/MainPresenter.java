@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
@@ -41,6 +42,7 @@ public class MainPresenter implements StatusService.PostStatusObserver,
     }
 
     public void logout() {
+        Cache.getInstance().clearCache();
         view.displayInfoMessage("Logging Out...");
         new UserService().logout(this);
     }
