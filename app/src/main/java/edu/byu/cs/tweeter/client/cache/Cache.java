@@ -50,4 +50,12 @@ public class Cache {
     public void setCurrUserAuthToken(AuthToken currUserAuthToken) {
         this.currUserAuthToken = currUserAuthToken;
     }
+
+    /**
+     * Porvides a way for tests to inject a mock cache instance
+     * @param cache the cache
+     */
+    public static void setInstance(Cache cache) {
+        Cache.instance = cache;
+    }
 }

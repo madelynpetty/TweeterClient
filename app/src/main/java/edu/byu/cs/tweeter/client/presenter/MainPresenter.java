@@ -1,13 +1,13 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import java.net.MalformedURLException;
+import java.text.ParseException;
+
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.User;
-
-import java.net.MalformedURLException;
-import java.text.ParseException;
 
 public class MainPresenter implements StatusService.PostStatusObserver,
         UserService.LogoutObserver, FollowService.FollowObserver, FollowService.UnfollowObserver,
@@ -45,6 +45,10 @@ public class MainPresenter implements StatusService.PostStatusObserver,
         Cache.getInstance().clearCache();
         view.displayInfoMessage("Logging Out...");
         new UserService().logout(this);
+    }
+
+    public void getUserService() { //for testing
+        new UserService();
     }
 
     @Override
