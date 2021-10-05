@@ -69,12 +69,12 @@ public class StoryPresenter implements StatusService.StoryObserver,
     }
 
     @Override
-    public void storyFailed(String message) {
+    public void handleFailed(String message) {
         view.displayMessage("Failed to get story: " + message);
     }
 
     @Override
-    public void storyThrewException(Exception e) {
-        view.displayMessage("Failed to get story because of exception: " + e.getMessage());
+    public void handleException(Exception ex) {
+        view.displayMessage("Failed to get story because of exception: " + ex.getMessage());
     }
 }

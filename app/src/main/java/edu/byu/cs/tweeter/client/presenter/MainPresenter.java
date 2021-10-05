@@ -72,13 +72,13 @@ public class MainPresenter implements StatusService.PostStatusObserver,
     }
 
     @Override
-    public void postStatusFailed(String message) {
+    public void handleFailed(String message) {
         view.displayErrorMessage("Failed to post status: " + message);
     }
 
     @Override
-    public void postStatusThrewException(Exception e) {
-        view.displayErrorMessage("Failed to post status because of exception: " + e.getMessage());
+    public void handleException(Exception ex) {
+        view.displayErrorMessage("Failed to post status because of exception: " + ex.getMessage());
     }
 
     @Override

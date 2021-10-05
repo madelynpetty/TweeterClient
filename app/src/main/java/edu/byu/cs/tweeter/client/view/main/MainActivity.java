@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
             presenter.postStatus(post);
         } catch (Exception ex) {
             Log.e(LOG_TAG, ex.getMessage(), ex);
-            presenter.postStatusThrewException(ex);
+            presenter.handleException(ex);
         }
     }
 

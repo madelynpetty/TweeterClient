@@ -12,6 +12,16 @@ import edu.byu.cs.tweeter.model.domain.User;
 public class FeedPresenter implements StatusService.FeedObserver,
         UserService.GetUserObserver {
 
+    @Override
+    public void handleFailed(String message) {
+        view.displayMessage("Failed to get feed: " + message);
+    }
+
+    @Override
+    public void handleException(Exception ex) {
+
+    }
+
     public interface View {
         void navigateToUser(User user);
         void setLoading(boolean value) throws MalformedURLException;
@@ -52,16 +62,6 @@ public class FeedPresenter implements StatusService.FeedObserver,
         if (hasMorePages) {
             isLoading = false;
         }
-    }
-
-    @Override
-    public void feedFailed(String message) {
-        view.displayMessage("Failed to get feed: " + message);
-    }
-
-    @Override
-    public void feedThrewException(Exception e) {
-
     }
 
     @Override
