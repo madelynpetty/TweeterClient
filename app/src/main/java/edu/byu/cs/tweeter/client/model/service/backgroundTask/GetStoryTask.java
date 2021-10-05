@@ -15,7 +15,6 @@ import edu.byu.cs.tweeter.util.Pair;
 public class GetStoryTask extends PagedStatusTask {
     private static final String LOG_TAG = "GetStoryTask";
 
-    public static final String STATUSES_KEY = "statuses";
     public GetStoryTask(AuthToken authToken, User targetUser, int limit, Status lastStatus,
                         Handler messageHandler) {
         super(authToken, targetUser, limit, lastStatus, messageHandler);

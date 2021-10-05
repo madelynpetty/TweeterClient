@@ -65,10 +65,10 @@ public class FollowingPresenter implements FollowService.GetFollowingObserver,
 
     //FOR GET FOLLOWING
     @Override
-    public void getFollowingSucceeded(List<User> users, boolean hasMorePages) {
-//        view.setRecyclerViewVars(users, hasMorePages);
+    public void getFollowingSucceeded(List<User> users, boolean hasMorePages, User lastFollowee) {
         view.setLoading(false);
         view.addItems(users);
+        this.lastFollowee = lastFollowee;
         this.hasMorePages = hasMorePages;
         if (hasMorePages) {
             isLoading = false;

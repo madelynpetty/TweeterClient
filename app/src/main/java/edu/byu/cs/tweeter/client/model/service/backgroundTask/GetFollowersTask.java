@@ -14,8 +14,6 @@ import edu.byu.cs.tweeter.util.Pair;
 public class GetFollowersTask extends PagedUserTask {
     private static final String LOG_TAG = "GetFollowersTask";
 
-    public static final String FOLLOWERS_KEY = "followers";
-
     public GetFollowersTask(AuthToken authToken, User targetUser, int limit, User lastFollower,
                             Handler messageHandler) {
         super(authToken, targetUser, limit, lastFollower, messageHandler);

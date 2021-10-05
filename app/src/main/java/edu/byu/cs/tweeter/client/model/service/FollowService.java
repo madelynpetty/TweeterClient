@@ -26,7 +26,7 @@ public class FollowService {
     //GET FOLLOWING
 
     public interface GetFollowingObserver {
-        void getFollowingSucceeded(List<User> users, boolean hasMorePages);
+        void getFollowingSucceeded(List<User> users, boolean hasMorePages, User lastFollowee);
         void getFollowingFailed(String message);
         void getFollowingThrewException(Exception e);
     }
@@ -51,9 +51,11 @@ public class FollowService {
         public void handleMessage(@NonNull Message msg) {
             boolean success = msg.getData().getBoolean(GetFollowingTask.SUCCESS_KEY);
             if (success) {
-                List<User> followees = (List<User>) msg.getData().getSerializable(GetFollowingTask.FOLLOWEES_KEY);
+                List<User> followees = (List<User>) msg.getData().getSerializable(GetFollowingTask.ITEMS_KEY);
                 boolean hasMorePages = msg.getData().getBoolean(GetFollowingTask.MORE_PAGES_KEY);
-                observer.getFollowingSucceeded(followees, hasMorePages);
+                User lastFollowee = (followees.size() > 0) ? followees.get(followees.size() - 1) : null;
+
+                observer.getFollowingSucceeded(followees, hasMorePages, lastFollowee);
             } else if (msg.getData().containsKey(GetFollowingTask.MESSAGE_KEY)) {
                 String message = msg.getData().getString(GetFollowingTask.MESSAGE_KEY);
                 observer.getFollowingFailed(message);
@@ -94,7 +96,7 @@ public class FollowService {
         public void handleMessage(@NonNull Message msg) {
             boolean success = msg.getData().getBoolean(GetFollowersTask.SUCCESS_KEY);
             if (success) {
-                List<User> followers = (List<User>) msg.getData().getSerializable(GetFollowersTask.FOLLOWERS_KEY);
+                List<User> followers = (List<User>) msg.getData().getSerializable(GetFollowersTask.ITEMS_KEY);
                 boolean hasMorePages = msg.getData().getBoolean(GetFollowersTask.MORE_PAGES_KEY);
                 User lastFollower = (followers.size() > 0) ? followers.get(followers.size() - 1) : null;
 
