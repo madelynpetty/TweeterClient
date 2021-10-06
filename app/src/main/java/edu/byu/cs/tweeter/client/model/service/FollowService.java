@@ -12,7 +12,6 @@ import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetFollowingCountT
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetFollowingTask;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.IsFollowerTask;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.UnfollowTask;
-import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowService {
@@ -24,8 +23,8 @@ public class FollowService {
         void getFollowingSucceeded(List<User> users, boolean hasMorePages, User lastFollowee);
     }
 
-    public void getFollowing(AuthToken authToken, User targetUser, int limit, User lastFollowee, GetFollowingObserver observer) {
-        GetFollowingTask getFollowingTask = new GetFollowingTask(authToken, targetUser, limit, lastFollowee, new GetFollowingHandler(observer));
+    public void getFollowing(User targetUser, int limit, User lastFollowee, GetFollowingObserver observer) {
+        GetFollowingTask getFollowingTask = new GetFollowingTask(Cache.getInstance().getCurrUserAuthToken(), targetUser, limit, lastFollowee, new GetFollowingHandler(observer));
         new ExecuteTask<>(getFollowingTask);
     }
 
@@ -226,6 +225,7 @@ public class FollowService {
 
     private class IsFollowerHandler extends BackgroundTaskHandler {
         private IsFollowerObserver observer;
+
         public IsFollowerHandler(IsFollowerObserver observer) {
             super(observer);
             this.observer = observer;

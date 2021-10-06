@@ -9,21 +9,12 @@ import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class FeedPresenter implements StatusService.FeedObserver,
+public class FeedPresenter extends PresenterView<Status> implements StatusService.FeedObserver,
         UserService.GetUserObserver {
 
-    public interface View {
-        void navigateToUser(User user);
-        void setLoading(boolean value) throws MalformedURLException;
-        void displayMessage(String message);
-        void addItems(List<Status> statuses);
-    }
+    public interface View extends PagedView<Status> {}
 
-    private View view;
-    private boolean isLoading = false;
-    private boolean hasMorePages = true;
-    private User user;
-    private Status lastStatus = null;
+    private FeedPresenter.View view;
 
     public FeedPresenter(View view, User user) {
         this.view = view;
@@ -39,8 +30,13 @@ public class FeedPresenter implements StatusService.FeedObserver,
             isLoading = true;
             view.setLoading(true);
 
-            new StatusService().getFeed(this, user, lastStatus);
+            new StatusService().getFeed(this, user, lastItem);
         }
+    }
+
+    @Override
+    public void getUserSucceeded(User user) {
+        view.navigateToUser(user);
     }
 
     @Override
@@ -48,15 +44,10 @@ public class FeedPresenter implements StatusService.FeedObserver,
         view.setLoading(false);
         view.addItems(statuses);
         this.hasMorePages = hasMorePages;
-        this.lastStatus = lastStatus;
+        this.lastItem = lastStatus;
         if (hasMorePages) {
             isLoading = false;
         }
-    }
-
-    @Override
-    public void getUserSucceeded(User user) {
-        view.navigateToUser(user);
     }
 
     @Override

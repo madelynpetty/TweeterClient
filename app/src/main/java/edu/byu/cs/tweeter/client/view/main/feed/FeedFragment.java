@@ -374,10 +374,14 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
     }
 
     @Override
-    public void setLoading(boolean value) throws MalformedURLException {
+    public void setLoading(boolean value) {
         isLoading = value;
         if (value) {
-            feedRecyclerViewAdapter.addLoadingFooter();
+            try {
+                feedRecyclerViewAdapter.addLoadingFooter();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
         }
         else {
             feedRecyclerViewAdapter.removeLoadingFooter();

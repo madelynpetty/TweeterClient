@@ -8,20 +8,11 @@ import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class StoryPresenter implements StatusService.StoryObserver,
+public class StoryPresenter extends PresenterView<Status> implements StatusService.StoryObserver,
         UserService.GetUserObserver {
 
-    public interface View {
-        void addItems(List<Status> statuses);
-        void displayMessage(String message);
-        void setLoading(boolean isLoading);
-        void navigateToUser(User user);
-    }
+    public interface View extends PagedView<Status> {}
 
-    private boolean isLoading = false;
-    private boolean hasMorePages = true;
-    private User user;
-    private Status lastStatus = null;
     private StoryPresenter.View view;
 
     public StoryPresenter(View view, User user) {
@@ -34,7 +25,7 @@ public class StoryPresenter implements StatusService.StoryObserver,
             isLoading = true;
             view.setLoading(true);
 
-            new StatusService().getStory(this, user, lastStatus);
+            new StatusService().getStory(this, user, lastItem);
         }
     }
 
@@ -52,7 +43,7 @@ public class StoryPresenter implements StatusService.StoryObserver,
         view.setLoading(false);
         view.addItems(statuses);
         this.hasMorePages = hasMorePages;
-        this.lastStatus = lastStatus;
+        this.lastItem = lastStatus;
         if (hasMorePages) {
             isLoading = false;
         }

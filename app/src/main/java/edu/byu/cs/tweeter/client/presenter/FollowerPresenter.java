@@ -7,21 +7,12 @@ import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class FollowerPresenter implements FollowService.GetFollowersObserver,
+public class FollowerPresenter extends PresenterView<User> implements FollowService.GetFollowersObserver,
         UserService.GetUserObserver {
 
-    public interface View {
-        void addItems(List<User> followees);
-        void setLoading(boolean value);
-        void navigateToUser(User user);
-        void displayMessage(String message);
-    }
+    public interface View extends PagedView<User> {}
 
-    private View view;
-    private boolean hasMorePages = true;
-    private boolean isLoading = false;
-    private User user;
-    private User lastFollower = null;
+    private FollowerPresenter.View view;
 
     public FollowerPresenter(View view, User user) {
         this.view = view;
@@ -41,7 +32,7 @@ public class FollowerPresenter implements FollowService.GetFollowersObserver,
             isLoading = true;
             view.setLoading(true);
 
-            new FollowService().getFollowers(this, user, lastFollower);
+            new FollowService().getFollowers(this, user, lastItem);
         }
     }
 
@@ -56,7 +47,7 @@ public class FollowerPresenter implements FollowService.GetFollowersObserver,
         view.setLoading(false);
         view.addItems(followers);
         this.hasMorePages = hasMorePages;
-        this.lastFollower = lastFollower;
+        this.lastItem = lastFollower;
         if (hasMorePages) {
             isLoading = false;
         }
