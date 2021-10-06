@@ -15,9 +15,6 @@ public class MainPresenter implements StatusService.PostStatusObserver,
         FollowService.IsFollowerObserver {
 
     public interface View {
-        void displayErrorMessage(String message);
-        void displayInfoMessage(String message);
-
         void logout();
 
         void updateFollowButton(boolean removed);
@@ -28,6 +25,8 @@ public class MainPresenter implements StatusService.PostStatusObserver,
 
         void setIsFollowerButton();
         void setIsNotFollowerButton();
+
+        void displayInfoMessage(String message);
     }
 
     private MainPresenter.View view;
@@ -36,7 +35,7 @@ public class MainPresenter implements StatusService.PostStatusObserver,
         this.view = view;
     }
 
-    public void postStatus(String post) throws ParseException, MalformedURLException {
+    public void postStatus(String post) throws ParseException {
         view.displayInfoMessage("Posting Status...");
         new StatusService().postStatus(post, this);
     }
@@ -72,28 +71,8 @@ public class MainPresenter implements StatusService.PostStatusObserver,
     }
 
     @Override
-    public void handleFailed(String message) {
-        view.displayErrorMessage("Failed to post status: " + message);
-    }
-
-    @Override
-    public void handleException(Exception ex) {
-        view.displayErrorMessage("Failed to post status because of exception: " + ex.getMessage());
-    }
-
-    @Override
     public void logoutSucceeded() {
         view.logout();
-    }
-
-    @Override
-    public void logoutFailed(String message) {
-        view.displayErrorMessage("Failed to logout: " + message);
-    }
-
-    @Override
-    public void logoutThrewException(Exception e) {
-        view.displayErrorMessage("Failed to logout because of exception: " + e.getMessage());
     }
 
     @Override
@@ -107,28 +86,8 @@ public class MainPresenter implements StatusService.PostStatusObserver,
     }
 
     @Override
-    public void followFailed(String message) {
-        view.displayInfoMessage("Failed to follow: " + message);
-    }
-
-    @Override
-    public void followThrewException(Exception ex) {
-        view.displayInfoMessage("Failed to follow because of exception: " + ex.getMessage());
-    }
-
-    @Override
     public void setFollowButton(boolean enabled) {
         view.setFollowButton(enabled);
-    }
-
-    @Override
-    public void unfollowFailed(String message) {
-        view.displayInfoMessage("Failed to unfollow: " + message);
-    }
-
-    @Override
-    public void unfollowThrewException(Exception e) {
-        view.displayErrorMessage("Failed to unfollow because of exception: " + e.getMessage());
     }
 
     @Override
@@ -137,28 +96,8 @@ public class MainPresenter implements StatusService.PostStatusObserver,
     }
 
     @Override
-    public void followerCountFailed(String message) {
-        view.displayInfoMessage("Failed to get followers count: " + message);
-    }
-
-    @Override
-    public void followerCountThrewException(Exception e) {
-        view.displayErrorMessage("Failed to get followers count because of exception: " + e.getMessage());
-    }
-
-    @Override
     public void setFollowingCount(int count) {
         view.setFollowingCount(count);
-    }
-
-    @Override
-    public void followingCountFailed(String message) {
-        view.displayInfoMessage("Failed to get following count: " + message);
-    }
-
-    @Override
-    public void followingCountThrewException(Exception e) {
-        view.displayErrorMessage("Failed to get following count because of exception: " + e.getMessage());
     }
 
     @Override
@@ -172,12 +111,12 @@ public class MainPresenter implements StatusService.PostStatusObserver,
     }
 
     @Override
-    public void isFollowerFailed(String message) {
-        view.displayInfoMessage("Failed to determine following relationship: " + message);
+    public void handleFailed(String message) {
+        view.displayInfoMessage("Failed: " + message);
     }
 
     @Override
-    public void isFollowerThrewException(Exception e) {
-        view.displayErrorMessage("Failed to determine following relationship because of exception: " + e.getMessage());
+    public void handleException(Exception ex) {
+        view.displayInfoMessage("Failed because of exception: " + ex.getMessage());
     }
 }

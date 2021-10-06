@@ -45,23 +45,11 @@ public class FollowerPresenter implements FollowService.GetFollowersObserver,
         }
     }
 
-    //FOR GET USERS
     @Override
     public void getUserSucceeded(User user) {
         view.navigateToUser(user);
     }
 
-    @Override
-    public void getUserFailed(String message) {
-
-    }
-
-    @Override
-    public void getUserThrewException(Exception e) {
-
-    }
-
-    //FOR GET FOLLOWER
 
     @Override
     public void getFollowerSucceeded(List<User> followers, boolean hasMorePages, User lastFollower) {
@@ -75,12 +63,12 @@ public class FollowerPresenter implements FollowService.GetFollowersObserver,
     }
 
     @Override
-    public void getFollowerFailed(String message) {
-        view.displayMessage("Failed to get followers: " + message);
+    public void handleFailed(String message) {
+        view.displayMessage("Failed: " + message);
     }
 
     @Override
-    public void getFollowerThrewException(Exception e) {
-        view.displayMessage("Failed to get followers because of exception: " + e.getMessage());
+    public void handleException(Exception ex) {
+        view.displayMessage("Failed because of exception: " + ex.getMessage());
     }
 }

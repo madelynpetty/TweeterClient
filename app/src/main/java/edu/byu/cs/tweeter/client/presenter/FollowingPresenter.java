@@ -53,16 +53,6 @@ public class FollowingPresenter implements FollowService.GetFollowingObserver,
         view.navigateToUser(user);
     }
 
-    @Override
-    public void getUserFailed(String message) {
-
-    }
-
-    @Override
-    public void getUserThrewException(Exception e) {
-
-    }
-
     //FOR GET FOLLOWING
     @Override
     public void getFollowingSucceeded(List<User> users, boolean hasMorePages, User lastFollowee) {
@@ -76,12 +66,12 @@ public class FollowingPresenter implements FollowService.GetFollowingObserver,
     }
 
     @Override
-    public void getFollowingFailed(String message) {
-        view.displayErrorMessage("Failed to get user's profile: " + message);
+    public void handleFailed(String message) {
+        view.displayErrorMessage("Failed: " + message);
     }
 
     @Override
-    public void getFollowingThrewException(Exception e) {
-        view.displayErrorMessage("Failed to get user's profile because of exception: " + e);
+    public void handleException(Exception ex) {
+        view.displayErrorMessage("Failed because of exception: " + ex.getMessage());
     }
 }

@@ -48,16 +48,6 @@ public class StoryPresenter implements StatusService.StoryObserver,
     }
 
     @Override
-    public void getUserFailed(String message) {
-
-    }
-
-    @Override
-    public void getUserThrewException(Exception e) {
-
-    }
-
-    @Override
     public void storySucceeded(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
         view.setLoading(false);
         view.addItems(statuses);
@@ -70,11 +60,11 @@ public class StoryPresenter implements StatusService.StoryObserver,
 
     @Override
     public void handleFailed(String message) {
-        view.displayMessage("Failed to get story: " + message);
+        view.displayMessage("Failed: " + message);
     }
 
     @Override
     public void handleException(Exception ex) {
-        view.displayMessage("Failed to get story because of exception: " + ex.getMessage());
+        view.displayMessage("Failed because of exception: " + ex.getMessage());
     }
 }

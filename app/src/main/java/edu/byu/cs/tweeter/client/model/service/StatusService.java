@@ -9,8 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetFeedTask;
@@ -31,8 +29,7 @@ public class StatusService {
     public static void getFeed(FeedObserver observer, User user, Status lastStatus) {
         GetFeedTask getFeedTask = new GetFeedTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, PAGE_SIZE, lastStatus, new GetFeedHandler(observer));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(getFeedTask);
+        new ExecuteTask<>(getFeedTask);
     }
 
     private static class GetFeedHandler extends BackgroundTaskHandler {
@@ -65,8 +62,7 @@ public class StatusService {
     public static void getStory(StoryObserver observer, User user, Status lastStatus) {
         GetStoryTask getStoryTask = new GetStoryTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, PAGE_SIZE, lastStatus, new GetStoryHandler(observer));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(getStoryTask);
+        new ExecuteTask<>(getStoryTask);
     }
 
     /**
@@ -96,12 +92,11 @@ public class StatusService {
         void postStatusSucceeded(String message);
     }
 
-    public void postStatus(String post, StatusService.PostStatusObserver observer) throws ParseException, MalformedURLException {
+    public void postStatus(String post, StatusService.PostStatusObserver observer) throws ParseException {
         Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(), parseURLs(post), parseMentions(post));
         PostStatusTask statusTask = new PostStatusTask(Cache.getInstance().getCurrUserAuthToken(),
                 newStatus, new PostStatusHandler(observer));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(statusTask);
+        new ExecuteTask<>(statusTask);
     }
 
     private class PostStatusHandler extends BackgroundTaskHandler {
@@ -125,7 +120,7 @@ public class StatusService {
         return statusFormat.format(userFormat.parse(LocalDate.now().toString() + " " + LocalTime.now().toString().substring(0, 8)));
     }
 
-    public List<String> parseURLs(String post) throws MalformedURLException {
+    public List<String> parseURLs(String post) {
         List<String> containedUrls = new ArrayList<>();
         for (String word : post.split("\\s")) {
             if (word.startsWith("http://") || word.startsWith("https://")) {
