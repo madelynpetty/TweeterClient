@@ -23,7 +23,7 @@ public class StatusService {
 
     //FEED
     public interface FeedObserver extends ServiceObserver {
-        void feedSucceeded(List<Status> statuses, boolean hasMorePages, Status lastStatus) throws MalformedURLException;
+        void statusSucceeded(List<Status> statuses, boolean hasMorePages, Status lastStatus) throws MalformedURLException;
     }
 
     public static void getFeed(FeedObserver observer, User user, Status lastStatus) {
@@ -33,11 +33,8 @@ public class StatusService {
     }
 
     private static class GetFeedHandler extends BackgroundTaskHandler {
-        private FeedObserver observer;
-
         public GetFeedHandler(FeedObserver observer) {
             super(observer);
-            this.observer = observer;
         }
 
         @Override
@@ -46,7 +43,7 @@ public class StatusService {
             boolean hasMorePages = msg.getData().getBoolean(GetFeedTask.MORE_PAGES_KEY);
             Status lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;
             try {
-                observer.feedSucceeded(statuses, hasMorePages, lastStatus);
+                ((FeedObserver)observer).statusSucceeded(statuses, hasMorePages, lastStatus);
             } catch (MalformedURLException e) {
                 observer.handleException(e);
             }
@@ -56,7 +53,7 @@ public class StatusService {
     //STORY
 
     public interface StoryObserver extends ServiceObserver {
-        void storySucceeded(List<Status> statuses, boolean hasMorePages, Status lastStatus);
+        void statusSucceeded(List<Status> statuses, boolean hasMorePages, Status lastStatus);
     }
 
     public static void getStory(StoryObserver observer, User user, Status lastStatus) {
@@ -69,11 +66,8 @@ public class StatusService {
      * Message handler (i.e., observer) for GetStoryTask.
      */
     private static class GetStoryHandler extends BackgroundTaskHandler {
-        StoryObserver observer;
-
         GetStoryHandler(StoryObserver observer) {
             super(observer);
-            this.observer = observer;
         }
 
         @Override
@@ -82,7 +76,7 @@ public class StatusService {
             boolean hasMorePages = msg.getData().getBoolean(GetStoryTask.MORE_PAGES_KEY);
             Status lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;
 
-            observer.storySucceeded(statuses, hasMorePages, lastStatus);
+            ((StoryObserver)observer).statusSucceeded(statuses, hasMorePages, lastStatus);
         }
     }
 
@@ -100,16 +94,13 @@ public class StatusService {
     }
 
     private class PostStatusHandler extends BackgroundTaskHandler {
-        private StatusService.PostStatusObserver observer;
-
         public PostStatusHandler(StatusService.PostStatusObserver observer) {
             super(observer);
-            this.observer = observer;
         }
 
         @Override
         public void handleSuccessMessage(Message msg) {
-            observer.postStatusSucceeded("Successfully Posted!");
+            ((PostStatusObserver)observer).postStatusSucceeded("Successfully Posted!");
         }
     }
 

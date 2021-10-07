@@ -20,7 +20,7 @@ public class FollowService {
     //GET FOLLOWING
 
     public interface GetFollowingObserver extends ServiceObserver {
-        void getFollowingSucceeded(List<User> users, boolean hasMorePages, User lastFollowee);
+        void followSucceeded(List<User> users, boolean hasMorePages, User lastFollowee);
     }
 
     public void getFollowing(User targetUser, int limit, User lastFollowee, GetFollowingObserver observer) {
@@ -32,11 +32,8 @@ public class FollowService {
      * Message handler (i.e., observer) for GetFollowingTask.
      */
     private class GetFollowingHandler extends BackgroundTaskHandler {
-        private GetFollowingObserver observer;
-
         public GetFollowingHandler(GetFollowingObserver observer) {
             super(observer);
-            this.observer = observer;
         }
 
 
@@ -46,15 +43,15 @@ public class FollowService {
             boolean hasMorePages = msg.getData().getBoolean(GetFollowingTask.MORE_PAGES_KEY);
             User lastFollowee = (followees.size() > 0) ? followees.get(followees.size() - 1) : null;
 
-            observer.getFollowingSucceeded(followees, hasMorePages, lastFollowee);
+            ((GetFollowingObserver)observer).followSucceeded(followees, hasMorePages, lastFollowee);
         }
     }
 
 
     //GET FOLLOWERS
 
-    public interface GetFollowersObserver extends ServiceObserver{
-        void getFollowerSucceeded(List<User> followers, boolean hasMorePages, User lastFollower);
+    public interface GetFollowersObserver extends ServiceObserver {
+        void followSucceeded(List<User> followers, boolean hasMorePages, User lastFollower);
     }
 
     public static void getFollowers(GetFollowersObserver observer, User user, User lastFollower) {
@@ -67,11 +64,8 @@ public class FollowService {
      * Message handler (i.e., observer) for GetFollowersTask.
      */
     private static class GetFollowersHandler extends BackgroundTaskHandler {
-        GetFollowersObserver observer;
-
         GetFollowersHandler(GetFollowersObserver observer) {
             super(observer);
-            this.observer = observer;
         }
 
         @Override
@@ -80,7 +74,7 @@ public class FollowService {
             boolean hasMorePages = msg.getData().getBoolean(GetFollowersTask.MORE_PAGES_KEY);
             User lastFollower = (followers.size() > 0) ? followers.get(followers.size() - 1) : null;
 
-            observer.getFollowerSucceeded(followers, hasMorePages, lastFollower);
+            ((GetFollowersObserver)observer).followSucceeded(followers, hasMorePages, lastFollower);
         }
     }
 
@@ -104,18 +98,15 @@ public class FollowService {
     }
 
     private class FollowHandler extends BackgroundTaskHandler {
-        private FollowService.FollowObserver observer;
-
         public FollowHandler(FollowService.FollowObserver observer) {
             super(observer);
-            this.observer = observer;
         }
 
         @Override
         protected void handleSuccessMessage(Message msg) {
-            observer.callUpdateSelectedUserFollowingAndFollowers(selectedUser);
-            observer.updateFollowButton(false);
-            observer.setFollowButton(true);
+            ((FollowObserver)observer).callUpdateSelectedUserFollowingAndFollowers(selectedUser);
+            ((FollowObserver)observer).updateFollowButton(false);
+            ((FollowObserver)observer).setFollowButton(true);
         }
     }
 
@@ -150,18 +141,15 @@ public class FollowService {
     }
 
     private class UnfollowHandler extends BackgroundTaskHandler {
-        private UnfollowObserver observer;
-
         public UnfollowHandler(UnfollowObserver observer) {
             super(observer);
-            this.observer = observer;
         }
 
         @Override
         protected void handleSuccessMessage(Message msg) {
-            observer.callUpdateSelectedUserFollowingAndFollowers(selectedUser);
-            observer.updateFollowButton(true);
-            observer.setFollowButton(true);
+            ((UnfollowObserver)observer).callUpdateSelectedUserFollowingAndFollowers(selectedUser);
+            ((UnfollowObserver)observer).updateFollowButton(true);
+            ((UnfollowObserver)observer).setFollowButton(true);
         }
     }
 
@@ -173,17 +161,14 @@ public class FollowService {
     }
 
     private class GetFollowersCountHandler extends BackgroundTaskHandler {
-        private FollowerCountObserver observer;
-
         public GetFollowersCountHandler(FollowerCountObserver observer) {
             super(observer);
-            this.observer = observer;
         }
 
         @Override
         protected void handleSuccessMessage(Message msg) {
             int count = msg.getData().getInt(GetFollowersCountTask.COUNT_KEY);
-            observer.setFollowerCount(count);
+            ((FollowerCountObserver)observer).setFollowerCount(count);
         }
     }
 
@@ -195,17 +180,14 @@ public class FollowService {
     }
 
     private class GetFollowingCountHandler extends BackgroundTaskHandler {
-        private FollowingCountObserver observer;
-
         public GetFollowingCountHandler(FollowingCountObserver observer) {
             super(observer);
-            this.observer = observer;
         }
 
         @Override
         protected void handleSuccessMessage(Message msg) {
             int count = msg.getData().getInt(GetFollowingCountTask.COUNT_KEY);
-            observer.setFollowingCount(count);
+            ((FollowingCountObserver)observer).setFollowingCount(count);
         }
     }
 
@@ -224,11 +206,8 @@ public class FollowService {
     }
 
     private class IsFollowerHandler extends BackgroundTaskHandler {
-        private IsFollowerObserver observer;
-
         public IsFollowerHandler(IsFollowerObserver observer) {
             super(observer);
-            this.observer = observer;
         }
 
         @Override
@@ -236,9 +215,9 @@ public class FollowService {
             boolean isFollower = msg.getData().getBoolean(IsFollowerTask.IS_FOLLOWER_KEY);
             // If logged-in user is a follower of the selected user, display the follow button as "following"
             if (isFollower) {
-                observer.setIsFollowerButton();
+                ((IsFollowerObserver)observer).setIsFollowerButton();
             } else {
-                observer.setIsNotFollowerButton();
+                ((IsFollowerObserver)observer).setIsNotFollowerButton();
             }
         }
     }

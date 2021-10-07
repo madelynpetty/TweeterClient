@@ -352,7 +352,11 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
     private void loadMoreItems() {
         final Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(() -> {
-            presenter.loadMoreItems();
+            try {
+                presenter.loadMoreItems();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
         }, 0);
     }
     @Override

@@ -18,11 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs.client.R;
-import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.presenter.FollowingPresenter;
 import edu.byu.cs.tweeter.client.view.main.MainActivity;
 import edu.byu.cs.tweeter.client.view.util.ImageUtils;
@@ -68,7 +68,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
 
         User user = (User) getArguments().getSerializable(USER_KEY);
 
-        presenter = new FollowingPresenter(this, Cache.getInstance().getCurrUserAuthToken(), user);
+        presenter = new FollowingPresenter(this, user);
         RecyclerView followingRecyclerView = view.findViewById(R.id.followingRecyclerView);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
@@ -87,7 +87,11 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         // Run this code later on the UI thread
         final Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(() -> {
-            presenter.loadMoreItems();
+            try {
+                presenter.loadMoreItems();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
         }, 0);
     }
 

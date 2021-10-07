@@ -33,17 +33,14 @@ public class UserService {
      * Message handler (i.e., observer) for GetUserTask.
      */
     private static class GetUserHandler extends BackgroundTaskHandler {
-        private GetUserObserver observer;
-
         public GetUserHandler(GetUserObserver observer) {
             super(observer);
-            this.observer = observer;
         }
 
         @Override
         protected void handleSuccessMessage(Message msg) {
             User user = (User) msg.getData().getSerializable(GetUserTask.USER_KEY);
-            observer.getUserSucceeded(user);
+            ((GetUserObserver)observer).getUserSucceeded(user);
         }
     }
 
@@ -68,11 +65,8 @@ public class UserService {
     }
 
     private class RegisterHandler extends BackgroundTaskHandler {
-        private UserService.RegisterObserver observer;
-
         public RegisterHandler(UserService.RegisterObserver observer) {
             super(observer);
-            this.observer = observer;
         }
 
         @Override
@@ -83,7 +77,7 @@ public class UserService {
             Cache.getInstance().setCurrUser(registeredUser);
             Cache.getInstance().setCurrUserAuthToken(authToken);
 
-            observer.registerSucceeded(authToken, registeredUser);
+            ((RegisterObserver)observer).registerSucceeded(authToken, registeredUser);
         }
     }
 
@@ -104,11 +98,8 @@ public class UserService {
      * Message handler (i.e., observer) for LoginTask
      */
     private class LoginHandler extends BackgroundTaskHandler {
-        private LoginObserver observer;
-
         public LoginHandler(LoginObserver observer) {
             super(observer);
-            this.observer = observer;
         }
 
         @Override
@@ -120,7 +111,7 @@ public class UserService {
             Cache.getInstance().setCurrUser(loggedInUser);
             Cache.getInstance().setCurrUserAuthToken(authToken);
 
-            observer.loginSucceeded(authToken, loggedInUser);
+            ((LoginObserver)observer).loginSucceeded(authToken, loggedInUser);
         }
     }
 
@@ -137,16 +128,13 @@ public class UserService {
     }
 
     private class LogoutHandler extends BackgroundTaskHandler {
-        private UserService.LogoutObserver observer;
-
         public LogoutHandler(UserService.LogoutObserver observer) {
             super(observer);
-            this.observer = observer;
         }
 
         @Override
         protected void handleSuccessMessage(Message msg) {
-            observer.logoutSucceeded();
+            ((LogoutObserver)observer).logoutSucceeded();
         }
     }
 }

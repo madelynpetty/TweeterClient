@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -292,7 +293,11 @@ public class FollowersFragment extends Fragment implements FollowerPresenter.Vie
 
             if ((visibleItemCount + firstVisibleItemPosition) >=
                     totalItemCount && firstVisibleItemPosition >= 0) {
-                presenter.loadMoreItems();
+                try {
+                    presenter.loadMoreItems();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -301,7 +306,11 @@ public class FollowersFragment extends Fragment implements FollowerPresenter.Vie
         // Run this code later on the UI thread
         final Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(() -> {
-            presenter.loadMoreItems();
+            try {
+                presenter.loadMoreItems();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
         }, 0);
     }
 
