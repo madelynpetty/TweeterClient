@@ -14,11 +14,7 @@ import edu.byu.cs.tweeter.util.Pair;
 public class GetFollowingTask extends PagedUserTask {
     private static final String LOG_TAG = "GetFollowingTask";
 
-    public static final String SUCCESS_KEY = "success";
-    public static final String FOLLOWEES_KEY = "followees";
     public static final String MORE_PAGES_KEY = "more-pages";
-    public static final String MESSAGE_KEY = "message";
-    public static final String EXCEPTION_KEY = "exception";
 
     public GetFollowingTask(AuthToken authToken, User targetUser, int limit, User lastFollowee,
                             Handler messageHandler) {

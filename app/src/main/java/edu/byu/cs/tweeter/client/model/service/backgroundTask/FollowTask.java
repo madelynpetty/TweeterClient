@@ -13,11 +13,9 @@ import edu.byu.cs.tweeter.model.domain.User;
 public class FollowTask extends AuthenticatedTask {
     private static final String LOG_TAG = "FollowTask";
 
-    private User followee;
 
     public FollowTask(AuthToken authToken, User followee, Handler messageHandler) {
         super(authToken, messageHandler);
-        this.followee = followee;
     }
 
     @Override

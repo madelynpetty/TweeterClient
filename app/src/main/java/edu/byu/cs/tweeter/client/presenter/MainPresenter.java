@@ -1,6 +1,5 @@
 package edu.byu.cs.tweeter.client.presenter;
 
-import java.net.MalformedURLException;
 import java.text.ParseException;
 
 import edu.byu.cs.tweeter.client.cache.Cache;
@@ -30,14 +29,16 @@ public class MainPresenter implements StatusService.PostStatusObserver,
     }
 
     private MainPresenter.View view;
+    private StatusService statusService; //for testing purposes only
 
     public MainPresenter(MainPresenter.View view) {
         this.view = view;
+        this.statusService = new StatusService();
     }
 
     public void postStatus(String post) throws ParseException {
         view.displayInfoMessage("Posting Status...");
-        new StatusService().postStatus(post, this);
+        getStatusService().postStatus(post, this);
     }
 
     public void logout() {
@@ -46,8 +47,9 @@ public class MainPresenter implements StatusService.PostStatusObserver,
         new UserService().logout(this);
     }
 
-    public void getUserService() { //for testing
-        new UserService();
+    public StatusService getStatusService() { //for testing purposes only
+        if (statusService == null) return new StatusService();
+        return statusService;
     }
 
     @Override
@@ -66,7 +68,7 @@ public class MainPresenter implements StatusService.PostStatusObserver,
     }
 
     @Override
-    public void postStatusSucceeded(String message) { //this might need to be a user
+    public void postStatusSucceeded(String message) {
         view.displayInfoMessage(message);
     }
 
