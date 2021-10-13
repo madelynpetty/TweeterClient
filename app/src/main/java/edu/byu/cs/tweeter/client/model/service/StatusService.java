@@ -87,7 +87,8 @@ public class StatusService {
     }
 
     public void postStatus(String post, StatusService.PostStatusObserver observer) throws ParseException {
-        Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(), parseURLs(post), parseMentions(post));
+        Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(),
+                parseURLs(post), parseMentions(post));
         PostStatusTask statusTask = new PostStatusTask(Cache.getInstance().getCurrUserAuthToken(),
                 newStatus, new PostStatusHandler(observer));
         new ExecuteTask<>(statusTask);

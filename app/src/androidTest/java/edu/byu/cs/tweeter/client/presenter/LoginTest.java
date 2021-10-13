@@ -14,7 +14,7 @@ package edu.byu.cs.tweeter.client.presenter;
 
 import org.junit.Test;
 
-public class MainPresenterTest {
+public class LoginTest {
     @Test
     public void testLogout_logoutSucceeds() {
 
